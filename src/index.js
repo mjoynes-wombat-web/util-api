@@ -1,11 +1,11 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import env from 'dotenv';
+import dotenv from 'dotenv';
 import morgan from 'morgan';
 
 import Routes from './routes';
 
-env.config();
+dotenv.config();
 const app = express();
 
 const { PORT } = process.env;
