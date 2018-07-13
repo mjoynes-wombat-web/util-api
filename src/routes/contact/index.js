@@ -4,7 +4,7 @@ import isValidEmail from 'ssmith-is-valid-email';
 
 dotenv.config();
 
-function validatePost(res, req, {
+function validatePost(req, res, {
   firstName,
   senderEmail,
   receiverName,
@@ -13,52 +13,52 @@ function validatePost(res, req, {
   msg,
 }) {
   if (!firstName) {
-    return res.status(400).json({
+    return {
       msg: 'The first name is missing.',
       reqBody: req.body,
-    });
+    };
   }
   if (!senderEmail) {
-    return res.status(400).json({
+    return {
       msg: 'The sender email is missing.',
       reqBody: req.body,
-    });
+    };
   }
   if (!isValidEmail(senderEmail)) {
-    return res.status(400).json({
+    return {
       msg: 'The sender email is invalid.',
       reqBody: req.body,
-    });
+    };
   }
   if (!receiverName) {
-    return res.status(400).json({
+    return {
       msg: 'The receiver name is missing.',
       reqBody: req.body,
-    });
+    };
   }
   if (!receiverEmail) {
-    return res.status(400).json({
+    return {
       msg: 'The receiver email is missing.',
       reqBody: req.body,
-    });
+    };
   }
   if (!isValidEmail(receiverEmail)) {
-    return res.status(400).json({
+    return {
       msg: 'The receiver email is invalid.',
       reqBody: req.body,
-    });
+    };
   }
   if (!subject) {
-    return res.status(400).json({
+    return {
       msg: 'The subject is missing.',
       reqBody: req.body,
-    });
+    };
   }
   if (!msg) {
-    return res.status(400).json({
+    return {
       msg: 'The message is missing.',
       reqBody: req.body,
-    });
+    };
   }
 
   return null;
@@ -146,7 +146,9 @@ function post(req, res) {
     confirmation,
   } = req.body;
 
-  validatePost(req, res, req.body);
+  const invalidPostJSON = validatePost(req, res, req.body);
+
+  if (invalidPostJSON) return res.status(400).json(invalidPostJSON);
 
   const transporter = nodemailer.createTransport({
     service: 'Gmail',
@@ -196,7 +198,6 @@ function post(req, res) {
           confirmationMsg,
           (confirmError, confirmInfo) => {
             let confirmMsgResponse;
-
             if (confirmError) {
               confirmMsgResponse = {
                 msg: 'You message was sent but the confirmation message failed.',
