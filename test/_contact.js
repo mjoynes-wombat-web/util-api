@@ -5,6 +5,7 @@ import chaiHttp from 'chai-http';
 import server from '../src';
 
 process.env.NODE_ENV = 'test';
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 chai.use(chaiHttp);
 
