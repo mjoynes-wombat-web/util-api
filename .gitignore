@@ -3,3 +3,5 @@ node_modules
 .vscode
 coverage
 .nyc_output
+.npmrc
+coverage.lcov

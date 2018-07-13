@@ -2,12 +2,15 @@
   "name": "util-api",
   "version": "1.0.0",
   "description": "A utility API for Wombat Web websites.",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon -w src --exec \"babel-node src --presets es2015,stage-0\"",
     "build": "babel src -s -D -d dist --presets es2015,stage-0",
     "start": "node dist",
-    "test": "npx nyc --reporter=html mocha --require babel-core/register --timeout 60000"
+    "test": "npx nyc --reporter=html mocha --require babel-core/register --timeout 60000",
+    "report-coverage": "npm run run-lcov-report && npm run send-coverage",
+    "run-lcov-report": "nyc report --reporter=text-lcov > coverage.lcov",
+    "send-coverage": "npm config get CODECOV_TOKEN | { read token; npx codecov -t $token }"
   },
   "repository": {
     "type": "git",
@@ -35,6 +38,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "chai": "^4.1.2",
     "chai-http": "^4.0.0",
+    "codecov": "^3.0.4",
     "eslint": "^5.1.0",
     "eslint-config-airbnb": "^17.0.0",
     "eslint-plugin-import": "^2.13.0",
