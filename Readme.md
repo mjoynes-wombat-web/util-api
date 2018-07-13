@@ -29,6 +29,8 @@ Set the following environment variables.
 PORT=####
 DEV=true // Only set in development.
 EMAIL_PASS=YOUR_PASS
+PRIVATE_KEY_FILE = PRIVATE_CERT_KEY_FILE
+CERTIFICATE_FILE = CERT_FILE
 ```
 
 ### Dependencies
