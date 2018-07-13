@@ -23,5 +23,5 @@ app.get('/', (req, res) => {
 });
 
 export default app.listen(PORT, () => {
-
+  if (process.env.DEV) console.log(`Server running on port ${PORT}.`);
 });
