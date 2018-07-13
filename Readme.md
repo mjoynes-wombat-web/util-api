@@ -35,7 +35,7 @@ EMAIL_PASS=YOUR_PASS
 
 These are the dependencies for this project.
 
-```json
+```
 "dependencies": {
   "body-parser": "^1.18.3",
   "dotenv": "^6.0.0",
@@ -141,7 +141,7 @@ Positing to this route with the information below will send a message.
 
 The following must be sent as raw JSON data.
 
-```json
+```
 {
   "firstName":"Senders First Name",  // Required
   "lastName":"Senders Last Name",
