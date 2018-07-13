@@ -4,6 +4,110 @@ import isValidEmail from 'ssmith-is-valid-email';
 
 dotenv.config();
 
+function validatePost(res, req, {
+  firstName,
+  senderEmail,
+  receiverName,
+  receiverEmail,
+  subject,
+  msg,
+}) {
+  if (!firstName) {
+    return res.status(400).json({
+      msg: 'The first name is missing.',
+      reqBody: req.body,
+    });
+  }
+  if (!senderEmail) {
+    return res.status(400).json({
+      msg: 'The sender email is missing.',
+      reqBody: req.body,
+    });
+  }
+  if (!isValidEmail(senderEmail)) {
+    return res.status(400).json({
+      msg: 'The sender email is invalid.',
+      reqBody: req.body,
+    });
+  }
+  if (!receiverName) {
+    return res.status(400).json({
+      msg: 'The receiver name is missing.',
+      reqBody: req.body,
+    });
+  }
+  if (!receiverEmail) {
+    return res.status(400).json({
+      msg: 'The receiver email is missing.',
+      reqBody: req.body,
+    });
+  }
+  if (!isValidEmail(receiverEmail)) {
+    return res.status(400).json({
+      msg: 'The receiver email is invalid.',
+      reqBody: req.body,
+    });
+  }
+  if (!subject) {
+    return res.status(400).json({
+      msg: 'The subject is missing.',
+      reqBody: req.body,
+    });
+  }
+  if (!msg) {
+    return res.status(400).json({
+      msg: 'The message is missing.',
+      reqBody: req.body,
+    });
+  }
+
+  return null;
+}
+
+function receiverMsg({
+  greeting = 'Hello',
+  firstName,
+  lastName,
+  confirmation,
+  msg,
+  signOff = 'Thank you',
+  receiverName,
+}) {
+  return `\
+${greeting} ${firstName}${lastName ? ` ${lastName}` : ''},
+
+${confirmation
+    ? `${confirmation}
+${msg}`
+    : msg}
+
+${signOff},
+${receiverName}
+`;
+}
+
+function confirmMsg({
+  firstName,
+  lastName,
+  msg,
+  greeting = 'Hello',
+  receptionMsg,
+  receiverName,
+  signOff = 'Thank you',
+}) {
+  return `\
+${greeting} ${receiverName},
+
+${receptionMsg
+    ? `${receptionMsg}
+${msg}`
+    : msg}
+
+${signOff},
+${firstName}${lastName ? ` ${lastName}` : ''}
+`;
+}
+
 export const contactDetails = {
   msg: 'This is the contact API route for v1. The details of this route is described below.',
   routes: {
@@ -36,67 +140,13 @@ function post(req, res) {
   const { EMAIL_PASS } = process.env;
 
   const {
-    firstName,
-    lastName,
     senderEmail,
     receiverEmail,
     subject,
-    msg,
     confirmation,
-    greeting = 'Hello',
-    receptionMsg,
-    receiverName,
-    signOff = 'Thank you',
   } = req.body;
 
-  if (!firstName) {
-    return res.status(400).json({
-      msg: 'The first name is missing.',
-      reqBody: req.body,
-    });
-  }
-  if (!senderEmail) {
-    return res.status(400).json({
-      msg: 'The sender email is missing.',
-      reqBody: req.body,
-    });
-  }
-  if (!isValidEmail(senderEmail)) {
-    return res.status(400).json({
-      msg: 'The sender email is invalid.',
-      reqBody: req.body,
-    });
-  }
-  if (!receiverEmail) {
-    return res.status(400).json({
-      msg: 'The receiver email is missing.',
-      reqBody: req.body,
-    });
-  }
-  if (!isValidEmail(receiverEmail)) {
-    return res.status(400).json({
-      msg: 'The receiver email is invalid.',
-      reqBody: req.body,
-    });
-  }
-  if (!subject) {
-    return res.status(400).json({
-      msg: 'The subject is missing.',
-      reqBody: req.body,
-    });
-  }
-  if (!msg) {
-    return res.status(400).json({
-      msg: 'The message is missing.',
-      reqBody: req.body,
-    });
-  }
-  if (!receiverName) {
-    return res.status(400).json({
-      msg: 'The receiver name is missing.',
-      reqBody: req.body,
-    });
-  }
+  validatePost(req, res, req.body);
 
   const transporter = nodemailer.createTransport({
     service: 'Gmail',
@@ -115,34 +165,14 @@ function post(req, res) {
     from: senderEmail,
     to: receiverEmail,
     subject,
-    text: `\
-${greeting} ${receiverName},
-
-${receptionMsg
-    ? `${receptionMsg}
-${msg}`
-    : msg}
-
-${signOff},
-${firstName}${lastName ? ` ${lastName}` : ''}
-`,
+    text: confirmMsg(req.body),
   };
 
   const confirmationMsg = {
     from: receiverEmail,
     to: senderEmail,
     subject,
-    text: `\
-${greeting} ${firstName}${lastName ? ` ${lastName}` : ''},
-
-${confirmation
-    ? `${confirmation}
-${msg}`
-    : msg}
-
-${signOff},
-${receiverName}
-`,
+    text: receiverMsg(req.body),
   };
 
   return transporter.sendMail(
