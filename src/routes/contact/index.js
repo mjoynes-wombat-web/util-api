@@ -132,7 +132,6 @@ export const contactDetails = {
 };
 
 function get(req, res) {
-  contactDetails.error = 'There is no data to GET from this route. Details of this route have been included.';
   return res.status(200).json(contactDetails);
 }
 
