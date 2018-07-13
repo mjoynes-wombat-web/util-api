@@ -2,9 +2,14 @@
   "name": "util-api",
   "version": "1.0.0",
   "description": "A utility API for Wombat Web websites.",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "mocha --timeout 10000"
+    "dev": "nodemon -w src --exec \"babel-node src --presets es2015,stage-0\"",
+    "build": "babel src -s -D -d dist --presets es2015,stage-0",
+    "start": "node dist",
+    "test": "npx nyc --reporter=html mocha --require babel-core/register --timeout 60000",
+    "coverage-report": "nyc report --reporter=text-lcov > coverage.lcov",
+    "send-coverage": "npm config get CODECOV_TOKEN | { read token; npx codecov -t $token }"
   },
   "repository": {
     "type": "git",
@@ -19,15 +24,27 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "dotenv": "^6.0.0",
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "morgan": "^1.9.0",
+    "nodemailer": "^4.6.7",
+    "ssmith-is-valid-email": "^1.0.3"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
     "chai": "^4.1.2",
+    "chai-http": "^4.0.0",
+    "codecov": "^3.0.4",
     "eslint": "^5.1.0",
     "eslint-config-airbnb": "^17.0.0",
     "eslint-plugin-import": "^2.13.0",
     "eslint-plugin-jsx-a11y": "^6.1.0",
     "eslint-plugin-react": "^7.10.0",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.1",
+    "nyc": "^12.0.2"
   }
 }
