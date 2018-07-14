@@ -7,4 +7,3 @@ coverage
 coverage.lcov
 dist
 cert
-package-lock.json
