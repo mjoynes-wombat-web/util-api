@@ -956,7 +956,7 @@ ${msgDetails.firstName} ${msgDetails.lastName}
             done();
           });
       });
-      it('Posting with an email that doesn\'t have authorization on the server returns an error.', (done) => {
+      it('Using an email in ENV that doesn\'t have authorization on the server returns an error.', (done) => {
         const msgDetails = {
           firstName: 'Simeon',
           lastName: 'Smith',
@@ -970,6 +970,8 @@ ${msgDetails.firstName} ${msgDetails.lastName}
           confirmation: 'The following message was sent.',
           signOff: 'Cheers',
         };
+
+        process.env.EMAIL_LOGIN = 'bad@request.com';
 
         chai.request(server)
           .post('/api/v1/contact')
