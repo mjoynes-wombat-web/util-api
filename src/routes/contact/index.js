@@ -136,7 +136,7 @@ function get(req, res) {
 }
 
 function post(req, res) {
-  const { EMAIL_PASS } = process.env;
+  const { EMAIL_LOGIN, EMAIL_PASS } = process.env;
 
   const {
     senderEmail,
@@ -154,7 +154,7 @@ function post(req, res) {
     port: 465,
     secure: true,
     auth: {
-      user: receiverEmail,
+      user: EMAIL_LOGIN,
       pass: EMAIL_PASS,
     },
     tls: {
