@@ -30,12 +30,14 @@ const whitelist = [
   'https://designbright.org',
   'https://165.227.7.212',
   'http://192.168.86.200',
+  (DEV ? 'http://localhost:3002' : null),
 ];
 
 if (process.env.DEV) whitelist.push(undefined);
 
 const corsOptions = {
   origin: (origin, callback) => {
+    console.log(origin);
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
